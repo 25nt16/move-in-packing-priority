@@ -97,7 +97,7 @@ This helped make sure the sorting and scoring worked correctly.
 
 ## Hugging Face Link
 
-https://huggingface.co/spaces/25nt16/move-in-packing-priority/tree/main
+https://huggingface.co/spaces/25nt16/move-in-packing-priority
 
 ## AI Acknowledgment
 
