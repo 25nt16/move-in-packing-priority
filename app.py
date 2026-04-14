@@ -4,9 +4,7 @@ from typing import List, Dict, Tuple
 import gradio as gr
 
 
-# ============================================================
-# Data parsing and validation
-# ============================================================
+# merge sort section
 
 def compute_score(item: Dict) -> float:
     """
