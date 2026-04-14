@@ -10,13 +10,13 @@ This project uses **Merge Sort**.
 Merge Sort is a good fit because:
 - it works well on lists of records, not just plain numbers
 - it has a clear divide and conquer structure that is easy to visualize
-- its repeated **split -> sort -> merge** pattern makes the algorithm steps easy for a beginner to follow
-- it produces a predictable step-by-step simulation for the user
+- its repeated split -> sort -> merge pattern makes the algorithm steps easier
+- it produces a predictable step by step simulation for the user
 
 The app sorts items by a single **priority score** in descending order.
 
 ### Priority Score Rule
-To turn the packing problem into one sortable value, this project uses:
+To compare items, I created a score:
 
 **score = user priority × 100 + fragility × 20 − weight**
 
@@ -25,32 +25,23 @@ This means that:
 - more fragile items should be handled earlier
 - lighter items are slightly easier to place or unpack first
 
-A higher score means the item should appear earlier in the final order.
-
-## Demo
-Add a screenshot, gif, or short video here after you run the app locally or on Hugging Face.
+The app sorts items from highest score to lowest.
 
 ## Problem Breakdown & Computational Thinking
 
 ### Decomposition
-The problem is broken into smaller parts:
-- read user input from the Gradio textbox
-- split the input into item records
-- validate each line and each field
-- compute a priority score for every item
-- run Merge Sort on the list of items
-- record each split, comparison, and merge step
-- show the final ranked list and simulation steps in the GUI
+I broke the problem into parts:
+- reading and validating input
+- calculating scores
+- sorting items using merge sort
+- displaying results
 
 ### Pattern Recognition
-The repeated patterns in this project are:
-- repeatedly splitting the list into smaller halves
-- repeatedly comparing the first items from two sorted halves
-- repeatedly taking the larger-score item first
-- repeatedly merging sublists back together
+Each item follows the same structure:
+- label, weight, fragility, priority
 
 ### Abstraction
-The app does **not** show low-level Python details like indexes and memory management.
+I simplified each item into a single score so it can be sorted easily.
 
 Instead, it shows only the details that help the user understand the process:
 - which list is being split
@@ -59,10 +50,10 @@ Instead, it shows only the details that help the user understand the process:
 - what the merged result looks like after each step
 
 ### Algorithm Design
-Input -> Processing -> Output:
-- **Input:** the user enters item lines in the form `label, weight, fragility, priority`
-- **Processing:** the app validates the data, computes a score for each item, then applies Merge Sort
-- **Output:** the app displays the final ranked order and a step-by-step merge sort simulation
+I used merge sort to:
+- split the list into smaller lists
+- sort each part
+- merge them back together in order
 
 ### Flowchart
 ```mermaid
@@ -78,125 +69,36 @@ flowchart TD
     G --> I[Display step-by-step simulation]
 ```
 
-## Preconditions and Assumptions
+## Conditions
 - each input line must contain exactly 4 values:
-  `label, weight, fragility, priority`
+  label, weight, fragility, priority
 - weight must be a non-negative number
 - fragility must be an integer from 1 to 5
 - priority must be an integer from 1 to 5
 - the app checks these rules and gives a clear error message if the input is invalid
 
-## What the User Sees During the Simulation
-The user sees:
-- each time the list is split into left and right halves
-- each comparison between two items during merging
-- which item is chosen from the left or right half
-- the merged result after each merge
+## Testing
 
-## Steps to Run
+I tested the app with different inputs:
 
-### Local
-1. Install Python 
-2. Open a terminal in the project folder.
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run the app:
-   ```bash
-   python app.py
-   ```
-5. Open the local Gradio link shown in the terminal.
+- normal input with several items
+- empty input
+- invalid values (like fragility outside 1–5)
+- items with the same priority
+- very heavy vs very light items
 
-### Files included
-- `app.py` - main Gradio application
-- `requirements.txt` - required Python packages
-- `README.md` - project documentation
+This helped make sure the sorting and scoring worked correctly.
 
-## requirements.txt
-This project uses:
-- gradio
+## Demo
+
+![Screenshot](projectssgradio1.png)
+![Screenshot](projectssgradio2.png)
+![Screenshot](projectssgradio3.png)
 
 ## Hugging Face Link
 
+https://huggingface.co/spaces/25nt16/move-in-packing-priority/tree/main
 
-## Testing
+## AI Acknowledgment
 
-### Typical test
-Input:
-```text
-Laptop Box, 4, 5, 5
-Kitchen Plates, 12, 5, 4
-Desk Lamp, 6, 3, 3
-Winter Clothes Bin, 10, 1, 2
-Toiletries Bag, 2, 2, 5
-Textbooks, 15, 1, 3
-```
-
-Expected behavior:
-- the app computes a score for each item
-- the app sorts by score from highest to lowest
-- the app shows all split and merge steps
-- the final ranking should put high-priority and fragile items near the top
-
-### Edge cases tested
-1. **Empty input**
-   - expected: error message telling the user to enter at least one item
-
-2. **Wrong number of fields**
-   - example: `Laptop Box, 4, 5`
-   - expected: error message explaining the required format
-
-3. **Negative weight**
-   - example: `Mirror, -3, 5, 4`
-   - expected: error message because weight cannot be negative
-
-4. **Fragility outside 1-5**
-   - example: `Mug, 2, 8, 4`
-   - expected: error message
-
-5. **Priority outside 1-5**
-   - example: `Notebook, 1, 2, 9`
-   - expected: error message
-
-6. **Single item**
-   - expected: the app should handle the base case correctly
-
-7. **Duplicate scores**
-   - expected: the app should still return a correct sorted list
-
-Add screenshots of at least one successful run and one invalid-input test.
-
-## Deployment Guide
-
-### GitHub
-1. Create a new repository on GitHub.
-2. Upload:
-   - `app.py`
-   - `requirements.txt`
-   - `README.md`
-   - screenshots folder if you have screenshots
-3. Commit and push the files.
-
-### Hugging Face Spaces
-1. Create a Hugging Face account.
-2. Click **New Space**.
-3. Choose:
-   - **SDK:** Gradio
-   - **Visibility:** Public
-4. Upload:
-   - `app.py`
-   - `requirements.txt`
-5. Wait for the build to finish.
-6. Copy the public Space link into this README and your OnQ submission.
-
-## Author & Acknowledgment
-Author: Max Noble
-
-AI use acknowledgment:
-This project was created with AI assistance permitted under the course policy. I used assistance from AI tools for help with guidance, code, debugging, and overall writing structure. I reviewed, understood, and submitted the final work.
-
-Sources:
-- Course project guidelines
-- Gradio documentation
-- Hugging Face Spaces documentation
+I used AI tools for help with overall structure, code, debugging, and understanding. I reviewed the code, made changes, and fully understand the project.
