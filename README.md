@@ -194,7 +194,7 @@ Add screenshots of at least one successful run and one invalid-input test.
 Author: Max Noble
 
 AI use acknowledgment:
-This project was created with AI assistance permitted under the course policy. The student reviewed, understood, and submitted the final work.
+This project was created with AI assistance permitted under the course policy. I used assistance from AI tools for help with guidance, code, debugging, and overall writing structure. I reviewed, understood, and submitted the final work.
 
 Sources:
 - Course project guidelines
