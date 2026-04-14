@@ -1,15 +1,15 @@
 # Move-In Packing Priority Simulator
 
 ## Chosen Problem
-This project solves the **Move-In Packing Priority** problem. A student may have many boxes or items to move into a dorm, apartment, or house. The app helps decide which items should be handled first by sorting them into a clear priority order.
+This project solves the **Move In Packing Priority** problem. A student may have an abundance of times to move into a dorm, apartment, or house. The app helps decide which items should be moved in first by sorting them by priority.
 
 ## Chosen Algorithm
 This project uses **Merge Sort**.
 
-### Why Merge Sort fits this problem
+### Why Merge Sort?
 Merge Sort is a good fit because:
 - it works well on lists of records, not just plain numbers
-- it has a clear divide-and-conquer structure that is easy to visualize
+- it has a clear divide and conquer structure that is easy to visualize
 - its repeated **split -> sort -> merge** pattern makes the algorithm steps easy for a beginner to follow
 - it produces a predictable step-by-step simulation for the user
 
@@ -20,7 +20,7 @@ To turn the packing problem into one sortable value, this project uses:
 
 **score = user priority × 100 + fragility × 20 − weight**
 
-This means:
+This means that:
 - higher user priority matters the most
 - more fragile items should be handled earlier
 - lighter items are slightly easier to place or unpack first
@@ -30,13 +30,10 @@ A higher score means the item should appear earlier in the final order.
 ## Demo
 Add a screenshot, gif, or short video here after you run the app locally or on Hugging Face.
 
-Example:
-`![Demo screenshot](screenshots/demo.png)`
-
 ## Problem Breakdown & Computational Thinking
 
 ### Decomposition
-The problem is broken into these smaller parts:
+The problem is broken into smaller parts:
 - read user input from the Gradio textbox
 - split the input into item records
 - validate each line and each field
@@ -96,12 +93,10 @@ The user sees:
 - which item is chosen from the left or right half
 - the merged result after each merge
 
-This helps a non-expert follow how Merge Sort creates the final packing order.
-
 ## Steps to Run
 
 ### Local
-1. Install Python 3.10+.
+1. Install Python 
 2. Open a terminal in the project folder.
 3. Install dependencies:
    ```bash
@@ -123,10 +118,7 @@ This project uses:
 - gradio
 
 ## Hugging Face Link
-Add your deployed Hugging Face Space link here.
 
-Example:
-`https://huggingface.co/spaces/your-username/your-space-name`
 
 ## Testing
 
@@ -199,7 +191,7 @@ Add screenshots of at least one successful run and one invalid-input test.
 6. Copy the public Space link into this README and your OnQ submission.
 
 ## Author & Acknowledgment
-Author: [Your Name]
+Author: Max Noble
 
 AI use acknowledgment:
 This project was created with AI assistance permitted under the course policy. The student reviewed, understood, and submitted the final work.
