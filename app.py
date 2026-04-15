@@ -1,42 +1,19 @@
-import math
 from typing import List, Dict, Tuple
-
 import gradio as gr
 
 
-# merge sort section
+# scoring and input checking
 
 def compute_score(item: Dict) -> float:
-    """
-    Compute a single packing-priority score.
-
-    Higher score = earlier in the packing/unpacking order.
-
-    Rule:
-    - user_priority matters the most
-    - fragile items should be handled earlier
-    - lighter items are slightly easier to place/unpack first
-
-    score = user_priority * 100 + fragility * 20 - weight
-    """
+    # bigger score means the item should be handled earlier
     return item["user_priority"] * 100 + item["fragility"] * 20 - item["weight"]
 
 
 def parse_items(raw_text: str) -> List[Dict]:
-    """
-    Parse user input from a multiline textbox.
-
-    Expected format:
-    label, weight, fragility, priority
-
-    Example:
-    Laptop Box, 4, 5, 5
-    Winter Coat Bin, 8, 1, 2
-    """
+    # input format: label, weight, fragility, priority
     if not raw_text or not raw_text.strip():
         raise ValueError(
-            "Please enter at least one item. Use one item per line in the format: "
-            "label, weight, fragility, priority"
+            "Please enter at least one item in the format: label, weight, fragility, priority"
         )
 
     items: List[Dict] = []
@@ -46,7 +23,7 @@ def parse_items(raw_text: str) -> List[Dict]:
         parts = [part.strip() for part in line.split(",")]
         if len(parts) != 4:
             raise ValueError(
-                f"Line {idx} is invalid. Each line must contain exactly 4 values: "
+                f"Line {idx} is invalid. Each line needs 4 values: "
                 "label, weight, fragility, priority"
             )
 
@@ -64,7 +41,7 @@ def parse_items(raw_text: str) -> List[Dict]:
             fragility = int(fragility_str)
             priority = int(priority_str)
         except ValueError:
-            raise ValueError(f"Line {idx}: fragility and priority must be integers.")
+            raise ValueError(f"Line {idx}: fragility and priority must be whole numbers.")
 
         if weight < 0:
             raise ValueError(f"Line {idx}: weight cannot be negative.")
@@ -85,9 +62,7 @@ def parse_items(raw_text: str) -> List[Dict]:
     return items
 
 
-# ============================================================
-# Merge sort with step recording
-# ============================================================
+# merge sort steps
 
 def short_item(item: Dict) -> str:
     return (
@@ -110,9 +85,9 @@ def merge_with_steps(left: List[Dict], right: List[Dict], steps: List[str], dept
     j = 0
 
     steps.append(
-        f"{indent}Merging these two sorted halves:\n"
-        f"{indent}LEFT:\n{indent}{list_to_block(left).replace(chr(10), chr(10) + indent)}\n"
-        f"{indent}RIGHT:\n{indent}{list_to_block(right).replace(chr(10), chr(10) + indent)}"
+        f"{indent}Merging these lists:\n"
+        f"{indent}Left side:\n{indent}{list_to_block(left).replace(chr(10), chr(10) + indent)}\n"
+        f"{indent}Right side:\n{indent}{list_to_block(right).replace(chr(10), chr(10) + indent)}"
     )
 
     while i < len(left) and j < len(right):
@@ -120,33 +95,33 @@ def merge_with_steps(left: List[Dict], right: List[Dict], steps: List[str], dept
         right_item = right[j]
 
         steps.append(
-            f"{indent}Compare:\n"
+            f"{indent}Comparing:\n"
             f"{indent}- {short_item(left_item)}\n"
             f"{indent}- {short_item(right_item)}"
         )
 
-        # Descending order: bigger score comes first.
+        # sort from highest score to lowest
         if left_item["score"] >= right_item["score"]:
             merged.append(left_item)
-            steps.append(f"{indent}Take LEFT item -> {left_item['label']}")
+            steps.append(f"{indent}Taking left item: {left_item['label']}")
             i += 1
         else:
             merged.append(right_item)
-            steps.append(f"{indent}Take RIGHT item -> {right_item['label']}")
+            steps.append(f"{indent}Taking right item: {right_item['label']}")
             j += 1
 
     while i < len(left):
         merged.append(left[i])
-        steps.append(f"{indent}LEFT has remaining item -> {left[i]['label']}")
+        steps.append(f"{indent}Left side has one item left: {left[i]['label']}")
         i += 1
 
     while j < len(right):
         merged.append(right[j])
-        steps.append(f"{indent}RIGHT has remaining item -> {right[j]['label']}")
+        steps.append(f"{indent}Right side has one item left: {right[j]['label']}")
         j += 1
 
     steps.append(
-        f"{indent}Merged result:\n"
+        f"{indent}Merged list:\n"
         f"{indent}{list_to_block(merged).replace(chr(10), chr(10) + indent)}"
     )
     return merged
@@ -157,7 +132,7 @@ def merge_sort_with_steps(items: List[Dict], steps: List[str], depth: int = 0) -
 
     if len(items) <= 1:
         steps.append(
-            f"{indent}Base case reached:\n"
+            f"{indent}Reached base case:\n"
             f"{indent}{list_to_block(items).replace(chr(10), chr(10) + indent)}"
         )
         return items[:]
@@ -167,9 +142,9 @@ def merge_sort_with_steps(items: List[Dict], steps: List[str], depth: int = 0) -
     right = items[mid:]
 
     steps.append(
-        f"{indent}Split list into two halves:\n"
-        f"{indent}LEFT:\n{indent}{list_to_block(left).replace(chr(10), chr(10) + indent)}\n"
-        f"{indent}RIGHT:\n{indent}{list_to_block(right).replace(chr(10), chr(10) + indent)}"
+        f"{indent}Splitting the list:\n"
+        f"{indent}Left side:\n{indent}{list_to_block(left).replace(chr(10), chr(10) + indent)}\n"
+        f"{indent}Right side:\n{indent}{list_to_block(right).replace(chr(10), chr(10) + indent)}"
     )
 
     sorted_left = merge_sort_with_steps(left, steps, depth + 1)
@@ -177,9 +152,7 @@ def merge_sort_with_steps(items: List[Dict], steps: List[str], depth: int = 0) -
     return merge_with_steps(sorted_left, sorted_right, steps, depth)
 
 
-# ============================================================
-# Output formatting
-# ============================================================
+# output text
 
 def format_ranked_table(items: List[Dict]) -> str:
     lines = [
@@ -196,13 +169,12 @@ def format_ranked_table(items: List[Dict]) -> str:
 
 def explain_score_rule() -> str:
     return (
-        "### Priority-score rule used by this app\n"
+        "### Score Rule\n"
         "- **Higher user priority** matters most.\n"
         "- **More fragile** items should be handled earlier.\n"
-        "- **Lighter** items are slightly easier to place/unpack first.\n\n"
+        "- **Lighter** items are a little easier to place or unpack first.\n\n"
         "**Score = user priority × 100 + fragility × 20 − weight**\n\n"
-        "The app uses **Merge Sort** to sort items by this score in **descending order** "
-        "(highest score first)."
+        "The app uses **Merge Sort** to sort items by this score in descending order."
     )
 
 
@@ -220,12 +192,12 @@ def run_simulation(raw_text: str) -> Tuple[str, str, str]:
     sorted_items = merge_sort_with_steps(items, steps)
 
     result_md = (
-        "## Final Packing Priority Order\n"
-        "Items with a **higher score** should be packed/unpacked earlier.\n\n"
+        "## Final Packing Order\n"
+        "Items with a **higher score** should be packed or unpacked earlier.\n\n"
         + format_ranked_table(sorted_items)
     )
 
-    steps_md = "## Merge Sort Simulation Steps\n\n" + "\n\n---\n\n".join(
+    steps_md = "## Merge Sort Steps\n\n" + "\n\n---\n\n".join(
         f"**Step {idx}:**\n\n{step}" for idx, step in enumerate(steps, start=1)
     )
 
@@ -244,7 +216,7 @@ with gr.Blocks(title="Move-In Packing Priority Simulator") as demo:
     gr.Markdown(
         """
 # Move-In Packing Priority Simulator
-This app solves the **Move-In Packing Priority** problem using **Merge Sort**.
+This app sorts move-in items using **Merge Sort**.
 
 Enter one item per line in this format:
 
@@ -265,7 +237,7 @@ Enter one item per line in this format:
         )
 
     with gr.Row():
-        sort_button = gr.Button("Run Merge Sort Simulation")
+        sort_button = gr.Button("Run Merge Sort")
 
     rule_output = gr.Markdown()
     result_output = gr.Markdown()
@@ -275,15 +247,14 @@ Enter one item per line in this format:
         fn=run_simulation,
         inputs=input_box,
         outputs=[result_output, steps_output, rule_output],
-  
     )
 
     gr.Markdown(
         """
 ### What the app shows
-- the **final ranked packing order**
-- the **step-by-step merge sort process**
-- the **score rule** used to rank items
+- the final packing order
+- the merge sort steps
+- the score rule used for sorting
 """
     )
 
