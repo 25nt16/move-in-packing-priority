@@ -68,15 +68,6 @@ flowchart TD
     G --> H[Display final ranked order]
     G --> I[Display step-by-step simulation]
 ```
-
-## Conditions
-- each input line must contain exactly 4 values:
-  label, weight, fragility, priority
-- weight must be a non-negative number
-- fragility must be an integer from 1 to 5
-- priority must be an integer from 1 to 5
-- the app checks these rules and gives a clear error message if the input is invalid
-
 ## Testing
 
 I tested the app with different inputs:
@@ -89,6 +80,23 @@ I tested the app with different inputs:
 
 This helped make sure the sorting and scoring worked correctly.
 
+Edge Cases:
+
+- each input line must contain exactly 4 values:
+- label, weight, fragility, priority
+- weight must be a non-negative number
+- fragility must be an integer from 1 to 5
+- priority must be an integer from 1 to 5
+- the app checks these rules and gives a clear error message if the input is invalid
+
+## Steps to Run
+
+1. Install requirements:
+   pip install -r requirements.txt
+
+2. Run the app:
+   python app.py
+
 ## Demo
 
 ![Screenshot](projectssgradio1.png)
@@ -99,6 +107,8 @@ This helped make sure the sorting and scoring worked correctly.
 
 https://huggingface.co/spaces/25nt16/move-in-packing-priority
 
-## AI Acknowledgment
+## Author & Acknowledgement
+
+Author: Max Noble
 
 I used AI tools for help with overall structure, code, debugging, and understanding. I reviewed the code, made changes, and fully understand the project.
